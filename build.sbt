@@ -18,7 +18,7 @@ lazy val ckit_dev = project
       "org.scalatest"    %%% "scalatest"                   % "3.2.19" % "test",
       "org.scala-js"     %%% "scala-js-macrotask-executor" % "1.1.1",
       "io.github.edadma" %%% "apion"                       % "0.0.8",
-      "io.github.edadma" %%% "rdb"                         % "0.0.4",
+      "io.github.edadma" %%% "rdb"                         % "0.0.5",
       "io.github.edadma" %%% "cross_platform"              % "0.0.20",
     ),
 //    libraryDependencies += "com.lihaoyi" %%% "pprint" % "0.9.0" % "test",

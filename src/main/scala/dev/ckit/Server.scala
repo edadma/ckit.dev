@@ -32,8 +32,10 @@ def createKitServer: Server =
 private def initializeSchema()(implicit db: DB): Unit =
   try {
     val schemaSql = readFile("schema.sql")
+    val data      = readFile("data.sql")
 
     executeSQL(schemaSql)
+    executeSQL(data)
     println("✅ Database schema initialized successfully from schema.sql")
   } catch {
     case e: Exception =>
