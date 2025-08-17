@@ -6,8 +6,6 @@ import io.github.edadma.cross_platform.readFile
 import zio.json.*
 
 import java.time.Instant
-import scala.io.Source
-import scala.util.Try
 
 case class Health(status: String, timestamp: Instant) derives JsonEncoder
 
