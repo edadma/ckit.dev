@@ -4,12 +4,12 @@ ThisBuild / evictionErrorLevel := Level.Warn
 
 publish / skip := true
 
-lazy val apion_template = project
+lazy val ckit_dev = project
   .in(file("."))
   .enablePlugins(ScalaJSPlugin)
 //  .enablePlugins(ScalablyTypedConverterPlugin)
   .settings(
-    name         := "apion_template",
+    name         := "ckit_dev",
     version      := "0.0.1",
     scalaVersion := "3.7.2",
     organization := "io.github.edadma",

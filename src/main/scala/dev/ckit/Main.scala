@@ -2,5 +2,5 @@ package dev.ckit
 
 @main
 def run(): Unit =
-  createTodoServer
-    .listen(3000) { println("Todo server running at http://localhost:3000") }
+  createKitServer
+    .listen(3000) { println("ckit.dev server running at http://localhost:3000") }
