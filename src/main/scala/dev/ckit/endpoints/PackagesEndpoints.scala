@@ -48,8 +48,7 @@ object PackagesEndpoints {
       val offset = (page - 1) * pageSize
 
       // Count total packages
-      val countSql                = s"SELECT COUNT(*) FROM packages p $whereClause"
-      val QueryResult(totalCount) = executeQuery(countSql)
+      val QueryResult(totalCount) = executeQuery(s"SELECT COUNT(*) AS count FROM packages p $whereClause")
 
       // Get packages with pagination
       val packagesSql = s"""
@@ -75,7 +74,7 @@ object PackagesEndpoints {
 
       PackageListResponse(
         packages = packages,
-        totalCount = totalCount.data.head.data,
+        totalCount = totalCount.data.head.getInt("count"),
         page = page,
         pageSize = pageSize,
       ).asJson
