@@ -16,9 +16,10 @@ lazy val ckit_dev = project
 //    libraryDependencies += "io.github.cquiroz" %%% "scala-java-time" % "2.6.0",
     libraryDependencies ++= Seq(
       "org.scalatest"    %%% "scalatest"                   % "3.2.19" % "test",
+      "com.lihaoyi"      %%% "pprint"                      % "0.9.3",
       "org.scala-js"     %%% "scala-js-macrotask-executor" % "1.1.1",
       "io.github.edadma" %%% "apion"                       % "0.0.8",
-      "io.github.edadma" %%% "rdb"                         % "0.0.14",
+      "io.github.edadma" %%% "rdb"                         % "0.0.17",
       "io.github.edadma" %%% "cross_platform"              % "0.0.20",
     ),
 //    libraryDependencies += "com.lihaoyi" %%% "pprint" % "0.9.0" % "test",

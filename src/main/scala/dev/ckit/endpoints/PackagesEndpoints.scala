@@ -3,9 +3,10 @@ package dev.ckit.endpoints
 import io.github.edadma.apion.*
 import io.github.edadma.rdb.{DB, executeQuery, QueryResult}
 import dev.ckit.models.*
-import zio.json.*
 
 import scala.concurrent.Future
+
+import pprint.pprintln
 
 object PackagesEndpoints {
 
@@ -60,15 +61,16 @@ object PackagesEndpoints {
       """
 
       val QueryResult(packageRows) = executeQuery(packagesSql)
+      pprintln(packageRows)
 
       val packages = packageRows.data.map { row =>
         Package(
           name = row.getString("name"),
-          displayName = row.getStringOption("displayName"),
+          displayName = row.getStringOption("display_name"),
           description = row.getString("description"),
           license = row.getString("license"),
           downloads = row.getLong("downloads"),
-          weeklyDownloads = row.getLong("weeklyDownloads"),
+          weeklyDownloads = row.getLong("weekly_downloads"),
         )
       }
 
