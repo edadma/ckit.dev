@@ -15,7 +15,7 @@ def createKitServer: Server =
   implicit val db: DB = new MemoryDB
 
 // Initialize schema
-//  initializeSchema()
+  initializeSchema()
 
   Server()
     .use(LoggingMiddleware())
@@ -38,9 +38,6 @@ private def initializeSchema()(implicit db: DB): Unit =
     executeSQL(schemaSql)
     println("✅ Database schema initialized successfully from schema.sql")
   } catch {
-    case e: java.io.FileNotFoundException =>
-      println("❌ schema.sql file not found in resources directory")
-      throw e
     case e: Exception =>
       println(s"❌ Failed to initialize database schema: ${e.getMessage}")
       throw e
