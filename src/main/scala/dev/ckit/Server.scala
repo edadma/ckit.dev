@@ -9,11 +9,19 @@ import java.time.Instant
 
 case class Health(status: String, timestamp: Instant) derives JsonEncoder
 
+case class PackageSearchEcho(
+    queryParameters: Map[String, String],
+    message: String,
+) derives JsonEncoder
+
 def createKitServer: Server =
   implicit val db: DB = new MemoryDB
 
 // Initialize schema
   initializeSchema()
+
+  val data = readFile("data.sql")
+  executeSQL(data)
 
   Server()
     .use(LoggingMiddleware())
@@ -28,14 +36,33 @@ def createKitServer: Server =
 
         Health(status, timestamp).asJson,
     )
+    .get(
+      "/api/v1/packages",
+      request => {
+        try {
+          // Get all query parameters
+          val queryParams = request.query
 
+          // Echo them back with a message
+          PackageSearchEcho(
+            queryParameters = queryParams,
+            message = s"Received ${queryParams.size} query parameters",
+          ).asJson
+
+        } catch {
+          case e: Exception =>
+            Map(
+              "error"   -> "internal_error",
+              "message" -> s"Error processing request: ${e.getMessage}",
+            ).asJson(500)
+        }
+      },
+    )
 private def initializeSchema()(implicit db: DB): Unit =
   try {
     val schemaSql = readFile("schema.sql")
-    val data      = readFile("data.sql")
 
     executeSQL(schemaSql)
-    executeSQL(data)
     println("✅ Database schema initialized successfully from schema.sql")
   } catch {
     case e: Exception =>
