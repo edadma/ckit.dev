@@ -48,8 +48,14 @@ object PackagesEndpoints {
 
       val offset = (page - 1) * pageSize
 
+      pprintln(executeQuery(s"select * from packages p $whereClause"))
       // Count total packages
       val QueryResult(totalCount) = executeQuery(s"SELECT COUNT(*) AS count FROM packages p $whereClause")
+      pprintln(totalCount)
+      println("----------------")
+      pprintln(executeQuery(s"SELECT COUNT(p.name) AS count FROM packages p"))
+      pprintln(executeQuery(s"SELECT COUNT(*) AS count FROM packages p"))
+      println(("whereClause", whereClause))
 
       // Get packages with pagination
       val packagesSql = s"""
@@ -61,7 +67,6 @@ object PackagesEndpoints {
       """
 
       val QueryResult(packageRows) = executeQuery(packagesSql)
-      pprintln(packageRows)
 
       val packages = packageRows.data.map { row =>
         Package(
