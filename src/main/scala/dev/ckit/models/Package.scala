@@ -12,7 +12,7 @@ case class Package(
 ) derives JsonEncoder
 
 case class PackageListResponse(
-    packages: List[Package],
+    packages: Seq[Package],
     totalCount: Int,
     page: Int,
     pageSize: Int,

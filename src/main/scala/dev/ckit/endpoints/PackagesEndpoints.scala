@@ -1,7 +1,7 @@
 package dev.ckit.endpoints
 
 import io.github.edadma.apion.*
-import io.github.edadma.rdb.{DB, executeSQL}
+import io.github.edadma.rdb.{DB, executeQuery, QueryResult}
 import dev.ckit.models.*
 import zio.json.*
 
@@ -48,8 +48,8 @@ object PackagesEndpoints {
       val offset = (page - 1) * pageSize
 
       // Count total packages
-      val countSql   = s"SELECT COUNT(*) FROM packages p $whereClause"
-      val totalCount = executeSQL(countSql).head
+      val countSql                = s"SELECT COUNT(*) FROM packages p $whereClause"
+      val QueryResult(totalCount) = executeQuery(countSql)
 
       // Get packages with pagination
       val packagesSql = s"""
@@ -60,22 +60,22 @@ object PackagesEndpoints {
         LIMIT $pageSize OFFSET $offset
       """
 
-      val packageRows = executeSQL(packagesSql)
+      val QueryResult(packageRows) = executeQuery(packagesSql)
 
-      val packages = packageRows.map { row =>
+      val packages = packageRows.data.map { row =>
         Package(
-          name = row(0),
-          displayName = if (row(1) != null && row(1).nonEmpty) Some(row(1)) else None,
-          description = row(2),
-          license = row(3),
-          downloads = row(4).toLong,
-          weeklyDownloads = row(5).toLong,
+          name = row.getString("name"),
+          displayName = row.getStringOption("displayName"),
+          description = row.getString("description"),
+          license = row.getString("license"),
+          downloads = row.getLong("downloads"),
+          weeklyDownloads = row.getLong("weeklyDownloads"),
         )
       }
 
       PackageListResponse(
         packages = packages,
-        totalCount = totalCount,
+        totalCount = totalCount.data.head.data,
         page = page,
         pageSize = pageSize,
       ).asJson
