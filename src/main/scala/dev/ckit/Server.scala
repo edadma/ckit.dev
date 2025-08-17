@@ -1,4 +1,4 @@
-package apion_template
+package dev.ckit
 
 import io.github.edadma.apion.*
 import zio.json.*

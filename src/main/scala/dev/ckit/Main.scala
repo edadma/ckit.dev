@@ -1,4 +1,4 @@
-package apion_template
+package dev.ckit
 
 @main
 def run(): Unit =
