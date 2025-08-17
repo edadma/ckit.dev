@@ -1,23 +1,47 @@
 package dev.ckit
 
 import io.github.edadma.apion.*
+import io.github.edadma.rdb.{DB, MemoryDB, executeSQL}
+import io.github.edadma.cross_platform.readFile
 import zio.json.*
 
+import java.time.Instant
+import scala.io.Source
 import scala.util.Try
 
+case class Health(status: String, timestamp: Instant) derives JsonEncoder
+
 def createKitServer: Server =
+  implicit val db: DB = new MemoryDB
+
+// Initialize schema
+//  initializeSchema()
+
   Server()
-    .use("/", StaticMiddleware("static"))
     .use(LoggingMiddleware())
     .use(CorsMiddleware())
+    .use("/", StaticMiddleware("static"))
     .get(
       "/health",
       _ =>
-        for {
-          dbStatus <- Try(executeSQL("SELECT 1")).isSuccess
-          timestamp = Instant.now()
-        } yield {
-          val status = if (dbStatus) "healthy" else "unhealthy"
-          Map("status" -> status, "timestamp" -> timestamp, "database" -> "rdb").asJson
-        },
+        val dbStatus  = executeSQL("SELECT 1").nonEmpty
+        val timestamp = Instant.now()
+        val status    = if (dbStatus) "healthy" else "unhealthy"
+
+        Health(status, timestamp).asJson,
     )
+
+private def initializeSchema()(implicit db: DB): Unit =
+  try {
+    val schemaSql = readFile("schema.sql")
+
+    executeSQL(schemaSql)
+    println("✅ Database schema initialized successfully from schema.sql")
+  } catch {
+    case e: java.io.FileNotFoundException =>
+      println("❌ schema.sql file not found in resources directory")
+      throw e
+    case e: Exception =>
+      println(s"❌ Failed to initialize database schema: ${e.getMessage}")
+      throw e
+  }
