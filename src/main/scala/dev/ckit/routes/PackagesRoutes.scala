@@ -11,6 +11,9 @@ object PackagesRoutes {
       // GET /api/v1/packages - List/search packages
       .get("/api/v1/packages", PackagesEndpoints.listPackages)
 
+      // GET /api/v1/packages/:id - Get individual package details by UUID
+      .get("/api/v1/packages/:id", PackagesEndpoints.getPackage)
+
     // Future routes for packages resource:
     // .get("/api/v1/packages/:name", PackagesEndpoints.getPackage)
     // .post("/api/v1/packages", PackagesEndpoints.createPackage)
